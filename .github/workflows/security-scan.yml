@@ -30,13 +30,8 @@ jobs:
       - name: Scan for Hardcoded Secrets
         uses: aquasecurity/trivy-action@master
         with:
-          # Scan type for filesystem
           scan-type: 'fs'
-          # Directory to scan
           scan-ref: '.'
-          # Specify ONLY the secret scanner
           scanners: 'secret'
-          # Output format
           format: 'table'
-          # If secrets are found, fail the build
           exit-code: '1'
