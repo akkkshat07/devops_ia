@@ -1,0 +1,42 @@
+name: Trivy IaC and Secret Scan
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  trivy-scan:
+    name: Run Trivy Scanners
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Scan for IaC Misconfigurations
+        uses: aquasecurity/trivy-action@master
+        with:
+          # Scan type for IaC
+          scan-type: 'config'
+          # Directory to scan
+          scan-ref: '.'
+          # Output format
+          format: 'table'
+          # If issues are found, fail the build
+          exit-code: '1'
+          # Filter for specific severities
+          severity: 'HIGH,CRITICAL'
+
+      - name: Scan for Hardcoded Secrets
+        uses: aquasecurity/trivy-action@master
+        with:
+          # Scan type for filesystem
+          scan-type: 'fs'
+          # Directory to scan
+          scan-ref: '.'
+          # Specify ONLY the secret scanner
+          scanners: 'secret'
+          # Output format
+          format: 'table'
+          # If secrets are found, fail the build
+          exit-code: '1'
